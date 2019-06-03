@@ -8,4 +8,4 @@ Project hour schedule can be found [here](https://docs.google.com/spreadsheets/d
 
 ## Design doc
 
-See [desing doc](https://docs.google.com/document/d/1szsUQ6vyJg03HvvxyilXT9BjcMB8t18-Y80Y8fv3S38/edit?usp=sharing)
+See [design doc](https://docs.google.com/document/d/1szsUQ6vyJg03HvvxyilXT9BjcMB8t18-Y80Y8fv3S38/edit?usp=sharing).
