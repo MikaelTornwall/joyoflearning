@@ -1,36 +1,40 @@
-const express =     require('express')
-const bodyParser =  require('body-parser')
-const cors =        require('cors')
-const mongoose =    require('mongoose')
-const app =         express()
+const http =                require('http')
+const express =             require('express')
+const bodyParser =          require('body-parser')
+const cors =                require('cors')
+const mongoose =            require('mongoose')
+const { logger, error } =   require('./utils/middleware')
+const User =                require('./models/user')
+const usersRouter =         require('./controllers/users')
+const config =              require('./utils/config')
+const app =                 express()
 
-const logger = (request, response, next) => {
-  console.log('Method:',request.method)
-  console.log('Path:  ', request.path)
-  console.log('Body:  ', request.body)
-  console.log('---')
-  next()
+const connectToDatabase = async () => {
+  try {
+    await mongoose.connect(config.mongoUrl)
+    console.log(`Connected to database`)
+  } catch (error) {
+    console.log(error)
+  }
 }
+
+connectToDatabase()
 
 app.use(cors())
 app.use(bodyParser.json())
 app.use(logger)
+app.use('/api/users', usersRouter)
 
-app.get('/', (req, res) => {
-  res.send('<h1>Hello, world!</h1>')
-})
+const server = http.createServer(app)
 
-app.get('/api/users', (req, res) => {
-  res.send('<h1>Hello, world!</h1>')
-})
+const PORT = config.port || 3001
 
-const PORT = 3001
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
 
-const error = (request, response) => {
-  response.status(404).send({error: 'unknown endpoint'})
-}
+server.on('close', () => {
+  mongoose.connection.close()
+})
 
 app.use(error)
