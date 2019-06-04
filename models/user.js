@@ -2,17 +2,28 @@ const mongoose =    require('mongoose')
 
 const userSchema = new mongoose.Schema({
   id: String,
-  username: String,
+  firstname: String,
+  lastname: String,
   email: String,
-  password: String
+  username: String,
+  password: String,
+  organization: String,
+  courses: Array,
+  role: String
 })
 
 userSchema.statics.format = (user) => {
+  console.log("Role: ", Role.Admin)
   return {
     id: user._id,
-    username: user.username,
+    firstname: user.firstname,
+    lastname: user.lastname,
     email: user.email,
-    password: user.password
+    username: user.username,
+    password: user.password,
+    organization: user.organization,
+    courses: [],
+    role: user.role
   }
 }
 

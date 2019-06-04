@@ -7,4 +7,4 @@ if (process.env.NODE_ENV !== 'production') {
 const mongoUrl = process.env.MONGODB_URI
 const port = process.env.PORT
 
-module.exports = { mongoUrl, port}
+module.exports = { mongoUrl, port }

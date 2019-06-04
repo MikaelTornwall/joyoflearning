@@ -1,5 +1,6 @@
 const usersRouter =   require('express').Router()
 const User =          require('../models/user')
+const Role =          require('../utils/role')
 
 usersRouter.get('/', async (req, res) => {
   try {
@@ -33,9 +34,13 @@ usersRouter.post('/', async (req, res) => {
     const body = req.body
 
     const user = new User({
+      firstname: body.firstname,
+      lastname: body.lastname,
       username: body.username,
       email: body.email,
-      password: body.password
+      password: body.password,
+      organization: body.organization,
+      role: Role.Admin
     })
 
     const savedUser = await user.save()
