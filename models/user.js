@@ -12,8 +12,7 @@ const userSchema = new mongoose.Schema({
   role: String
 })
 
-userSchema.statics.format = (user) => {
-  console.log("Role: ", Role.Admin)
+userSchema.statics.format = (user) => {  
   return {
     id: user._id,
     firstname: user.firstname,

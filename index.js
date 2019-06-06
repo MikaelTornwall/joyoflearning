@@ -6,6 +6,7 @@ const mongoose =            require('mongoose')
 const { logger, error } =   require('./utils/middleware')
 const User =                require('./models/user')
 const usersRouter =         require('./controllers/users')
+const studentsRouter =         require('./controllers/students')
 const config =              require('./utils/config')
 const app =                 express()
 
@@ -24,6 +25,7 @@ app.use(cors())
 app.use(bodyParser.json())
 app.use(logger)
 app.use('/api/users', usersRouter)
+app.use('/api/students', studentsRouter)
 
 const server = http.createServer(app)
 
