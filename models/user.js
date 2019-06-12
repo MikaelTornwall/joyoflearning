@@ -8,11 +8,12 @@ const userSchema = new mongoose.Schema({
   username: String,
   password: String,
   organization: String,
+  logo: Buffer,
   courses: Array,
   role: String
 })
 
-userSchema.statics.format = (user) => {  
+userSchema.statics.format = (user) => {
   return {
     id: user._id,
     firstname: user.firstname,

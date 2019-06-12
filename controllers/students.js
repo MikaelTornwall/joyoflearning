@@ -5,12 +5,10 @@ const Role =          require('../utils/role')
 studentsRouter.get('/', async (req, res) => {
   try {
     const students = await Student.find({})
-
     res.json(students)
   } catch (exception) {
     console.log(exception)
   }
-
 })
 
 studentsRouter.post('/', async (req, res) => {
