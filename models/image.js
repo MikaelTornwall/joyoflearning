@@ -5,6 +5,7 @@ const imageSchema = new mongoose.Schema({
     data: Buffer,
     path: String,
     size: Number,
+    date: Date,
     contentType: String
   }
 })
@@ -15,6 +16,7 @@ imageSchema.statics.format = (image) => {
       data: image.data,
       path: image.path,
       size: image.size,
+      date: image.date,
       contentType: image.contentType
     }
   }

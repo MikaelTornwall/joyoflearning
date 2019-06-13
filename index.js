@@ -10,12 +10,21 @@ const studentsRouter =      require('./controllers/students')
 const imagesRouter =        require('./controllers/images')
 const config =              require('./utils/config')
 const multer =              require('multer')
+let GridFSStorage = require('multer-gridfs-storage');
+let Grid = require('gridfs-stream');
 const morgan =              require('morgan')
 const app =                 express()
 
+let storage = null
+
 const connectToDatabase = async () => {
   try {
-    await mongoose.connect(config.mongoUrl)
+    const promise = await mongoose.connect(config.mongoUrl)
+
+    storage = new GridFSStorage({
+      db: promise
+    })
+
     console.log(`Connected to database`)
   } catch (error) {
     console.log(error)
@@ -24,12 +33,18 @@ const connectToDatabase = async () => {
 
 connectToDatabase()
 
-const storage = multer.diskStorage({
+/*const storage = multer.diskStorage({
   destination: 'uploads/',
   filename: function (fieldname, filename) {
     return filename
   }
-})
+})*/
+
+/*const storage = require('multer-gridfs-storage')({
+  url: config.mongoUrl
+})*/
+
+//const upload = multer({ storage: storage })
 
 app.use(cors())
 app.use(bodyParser.json())

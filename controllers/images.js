@@ -19,7 +19,7 @@ imagesRouter.get('/', async (req, res) => {
 imagesRouter.post('/', upload.single('image'), async (req, res) => {
   try {
     console.log("FILE: " + req.file)
-    if (req.file) {
+    if (!req.file) {
       console.log('No file')
       res.send({
         success: false
@@ -43,6 +43,7 @@ imagesRouter.post('/', upload.single('image'), async (req, res) => {
         data: req.file.buffer,
         path: filePath,
         size: req.file.size,
+        date: Date.now(),
         contentType: req.file.mimetype
       }
     })
