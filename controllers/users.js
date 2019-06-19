@@ -12,23 +12,23 @@ usersRouter.get('/', async (req, res) => {
   }
 })
 
-usersRouter.get('/:id', async (req, res) => {
+usersRouter.get('/:id', async (req, res, next) => {
   try {
     const id = req.params.id
 
-    const user = await User.findOne({ _id: id })
+    const user = await User.findById({ _id: id })
 
     if (user) {
-      res.json(user)
+      res.json(user.toJSON())
     } else {
       res.status(404).end()
     }
-  } catch (exception) {
-    ress.status(404).send({ error: 'malformatted id' })
+  } catch (error) {
+    next(error)
   }
 })
 
-usersRouter.post('/', async (req, res) => {
+usersRouter.post('/', async (req, res, next) => {
   try {
     const body = req.body
 
@@ -39,17 +39,26 @@ usersRouter.post('/', async (req, res) => {
       email: body.email,
       password: body.password,
       organization: body.organization,
+      date: new Date(),
       role: Role.Admin
     })
 
     const savedUser = await user.save()
 
     res.json(savedUser)
-  } catch (exception) {
-    console.log(exception)
-    res.status(500).json({ error: 'something went wrong' })
+  } catch (error) {
+    next(error)
   }
+})
 
+usersRouter.delete('/:id', async (req, res, next) => {
+  try {
+    const id = req.params.id
+    await User.findByIdAndRemove(id)
+    res.status(204).end()
+  } catch (error) {
+    next(error)
+  }
 })
 
 module.exports = usersRouter

@@ -2,30 +2,52 @@ const mongoose =    require('mongoose')
 
 const userSchema = new mongoose.Schema({
   id: String,
-  firstname: String,
-  lastname: String,
-  email: String,
-  username: String,
-  password: String,
-  organization: String,
+  firstname: {
+    type: String,
+    minlength: 2,
+    required: true
+  },
+  lastname: {
+    type: String,
+    minlength: 2,
+    required: true
+  },
+  email: {
+    type: String,
+    minlength: 5,
+    required: true
+  },
+  username: {
+    type: String,
+    minlength: 5,
+    required: true
+  },
+  password: {
+    type: String,
+    minlength: 5,
+    required: true
+  },
+  organization: {
+    type: String,
+    minlength: 2,
+    required: false
+  },
+  date: {
+    type: Date,
+    required: true
+  },
   logo: Buffer,
   courses: Array,
   role: String
 })
 
-userSchema.statics.format = (user) => {
-  return {
-    id: user._id,
-    firstname: user.firstname,
-    lastname: user.lastname,
-    email: user.email,
-    username: user.username,
-    password: user.password,
-    organization: user.organization,
-    courses: [],
-    role: user.role
+userSchema.set('toJSON', {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id
+    delete returnedObject._id
+    delete returnedObject.__v
   }
-}
+})
 
 const User = mongoose.model('User', userSchema)
 

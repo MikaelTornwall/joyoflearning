@@ -1,23 +1,32 @@
 const mongoose =        require('mongoose')
 
 const studentSchema = new mongoose.Schema({
-  email: String,
-  username: String,
-  password: String,
+  email: {
+    type: String,
+    minlength: 5,
+    required: true
+  },
+  username: {
+    type: String,
+    minlength: 5,
+    required: true
+  },
+  password: {
+    type: String,
+    minlength: 5,
+    required: true
+  },
   enrolled: Array,
   role: String
 })
 
-studentSchema.statics.format = (student) => {
-  return {
-    id: student._id,
-    email: student.email,
-    username: student.username,
-    password: student.password,
-    enrolled: [],
-    role: student.role
+studentSchema.set('toJSON', {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id
+    delete returnedObject._id
+    delete returnedObject.__v
   }
-}
+})
 
 const Student = mongoose.model('Student', studentSchema)
 

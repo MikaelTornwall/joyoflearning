@@ -10,17 +10,13 @@ const imageSchema = new mongoose.Schema({
   }
 })
 
-imageSchema.statics.format = (image) => {
-  return {
-    image: {
-      data: image.data,
-      path: image.path,
-      size: image.size,
-      date: image.date,
-      contentType: image.contentType
-    }
+imageSchema.set('toJSON', {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id
+    delete returnedObject._id
+    delete returnedObject.__v
   }
-}
+})
 
 const Image = mongoose.model('Image', imageSchema)
 

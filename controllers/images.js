@@ -43,7 +43,7 @@ imagesRouter.post('/', upload.single('image'), async (req, res) => {
         data: req.file.buffer,
         path: filePath,
         size: req.file.size,
-        date: Date.now(),
+        date: new Date(),
         contentType: req.file.mimetype
       }
     })
