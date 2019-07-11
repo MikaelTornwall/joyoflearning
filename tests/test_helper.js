@@ -6,7 +6,7 @@ const initialUsers = [
     lastname: 'Testikäyttäjä',
     username: 'Ensimmäinen',
     email: 'ensimmäinen@email.com',
-    password: 'salasana',
+    passwordHash: 'salasana',
     organization: 'TestiFirma',
     date: new Date()
   },
@@ -15,7 +15,7 @@ const initialUsers = [
     lastname: 'Testikäyttäjä',
     username: 'Toinen',
     email: 'toinen@email.com',
-    password: 'salasana',
+    passwordHash: 'salasana',
     organization: 'ToinenTestiFirma',
     date: new Date()
   },
@@ -24,7 +24,7 @@ const initialUsers = [
     lastname: 'Testaaja',
     username: 'Kolmas',
     email: 'kolmas@email.com',
-    password: 'salasana',
+    passwordHash: 'salasana',
     organization: 'KolmasTestiYritys',
     date: new Date()
   }

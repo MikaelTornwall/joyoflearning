@@ -23,7 +23,7 @@ test('all users are returned', async () => {
   expect(res.length).toBe(helper.initialUsers.length)
 })
 
-test('a specific note is within the returned notes', async () => {
+test('a specific user is within the returned usersß', async () => {
   const res = await helper.usersInDb()
 
   const usernames = res.map(data => data.username)
@@ -46,6 +46,77 @@ test('a specific user can be returned', async () => {
   const returnedUser = await User.findById(firstUser.id)
 
   expect(returnedUser.username).toBe(firstUser.username)
+})
+
+test('a user with a unique username can be added', async () => {
+  const usersAtStart = await helper.usersInDb()
+
+  const newUser = {
+    firstname: 'Neljäs',
+    lastname: 'Testaaja',
+    username: 'Neljas',
+    email: 'neljas@email.com',
+    passwordHash: 'salasana',
+    organization: 'NeljasTestiOrganisaatio',
+    date: Date.now()
+  }
+
+  await api
+    .post('/api/users')
+    .send(newUser)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+  const usersAtEnd = await helper.usersInDb()
+
+  expect(usersAtEnd.length).toBe(usersAtStart.length + 1)
+
+  const usernames = usersAtEnd.map(user => user.username)
+  expect(usernames).toContain(newUser.username)
+})
+
+test('only unique usernames and emails can be added to database', async () => {
+  const usersAtStart = await helper.usersInDb()
+
+  const firstNewUser = {
+    firstname: 'Kolmas',
+    lastname: 'Testaaja',
+    username: 'Kolmas',
+    email: 'kolmasTesti@email.com',
+    passwordHash: 'salasana',
+    organization: 'KolmasTestiYritys',
+    date: new Date()
+  }
+
+  const firstResult = await api
+    .post('/api/users')
+    .send(firstNewUser)
+    .expect(400)
+    .expect('Content-Type', /application\/json/)
+
+  expect(firstResult.body.error).toContain('`username` to be unique')
+
+  const secondNewUser = {
+    firstname: 'Kolmas',
+    lastname: 'Testaaja',
+    username: 'KolmasTesti',
+    email: 'kolmas@email.com',
+    passwordHash: 'salasana',
+    organization: 'KolmasTestiYritys',
+    date: new Date()
+  }
+
+  const secondResult = await api
+    .post('/api/users')
+    .send(secondNewUser)
+    .expect(400)
+    .expect('Content-Type', /application\/json/)
+
+  expect(secondResult.body.error).toContain('`email` to be unique')
+
+  const usersAtEnd = await helper.usersInDb()
+
+  expect(usersAtEnd.length).toBe(usersAtStart.length)
 })
 
 afterAll(() => {
