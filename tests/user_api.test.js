@@ -75,6 +75,29 @@ test('a user with a unique username can be added', async () => {
   expect(usernames).toContain(newUser.username)
 })
 
+test('user cannot be added if required fields are not included', async () => {
+  const usersAtStart = await helper.usersInDb()
+
+  const newUser = {
+    passwordHash: 'salasana',
+    organization: 'TestOrganization'
+  }
+
+  const result = await api
+    .post('/api/users')
+    .send(newUser)
+    .expect(400)
+
+  expect(result.body.error).toContain('Path `firstname` is required')
+  expect(result.body.error).toContain('Path `lastname` is required')
+  expect(result.body.error).toContain('Path `username` is required')
+  expect(result.body.error).toContain('Path `email` is required')
+
+  const usersAtEnd = await helper.usersInDb()
+
+  expect(usersAtEnd.length).toBe(usersAtStart.length)
+})
+
 test('only unique usernames and emails can be added to database', async () => {
   const usersAtStart = await helper.usersInDb()
 

@@ -8,7 +8,7 @@ const initialUsers = [
     email: 'ensimmäinen@email.com',
     passwordHash: 'salasana',
     organization: 'TestiFirma',
-    date: new Date()
+    date: Date.now()
   },
   {
     firstname: 'Toinen',
@@ -17,7 +17,7 @@ const initialUsers = [
     email: 'toinen@email.com',
     passwordHash: 'salasana',
     organization: 'ToinenTestiFirma',
-    date: new Date()
+    date: Date.now()
   },
   {
     firstname: 'Kolmas',
@@ -26,7 +26,7 @@ const initialUsers = [
     email: 'kolmas@email.com',
     passwordHash: 'salasana',
     organization: 'KolmasTestiYritys',
-    date: new Date()
+    date: Date.now()
   }
 ]
 
