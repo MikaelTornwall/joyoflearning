@@ -1,15 +1,14 @@
 const usersRouter =   require('express').Router()
-const bcrypt = require('bcrypt')
+const bcrypt =        require('bcrypt')
 const User =          require('../models/user')
 const Role =          require('../utils/role')
 
-usersRouter.get('/', async (req, res) => {
+usersRouter.get('/', async (req, res, next) => {
   try {
     const users = await User.find({})
-
     res.json(users)
-  } catch (exception) {
-    console.log(exception)
+  } catch (error) {
+    next(error)
   }
 })
 
@@ -34,14 +33,14 @@ usersRouter.post('/', async (req, res, next) => {
     const body = req.body
 
     const saltrounds = 10
-    const passwordHash = await bcrypt.hash(body.passwordHash, saltrounds)
+    const passwordHash = await bcrypt.hash(body.password, saltrounds)
 
     const user = new User({
       firstname: body.firstname,
       lastname: body.lastname,
       username: body.username,
       email: body.email,
-      passwordHash: passwordHash || '',
+      passwordHash,
       organization: body.organization,
       date: new Date(),
       role: Role.Admin

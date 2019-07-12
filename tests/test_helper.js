@@ -1,4 +1,5 @@
 const User =                require('../models/user')
+const Student =             require('../models/student')
 
 const initialUsers = [
   {
@@ -30,9 +31,32 @@ const initialUsers = [
   }
 ]
 
+const initialStudents = [
+  {
+    username: 'FirstStudent',
+    email: 'firststudent@email.com',
+    passwordHash: 'salasana'
+  },
+  {
+    username: 'SecondStudent',
+    email: 'secondstudent@email.com',
+    passwordHash: 'salasana'
+  },
+  {
+    username: 'ThirdStudent',
+    email: 'thirdstudent@email.com',
+    passwordHash: 'salasana'
+  }
+]
+
 const usersInDb = async () => {
   const users = await User.find({})
   return users.map(user => user.toJSON())
 }
 
-module.exports = { initialUsers, usersInDb }
+const studentsInDb = async () => {
+  const students = await Student.find({})
+  return students.map(student => student.toJSON())
+}
+
+module.exports = { initialUsers, usersInDb, initialStudents, studentsInDb }

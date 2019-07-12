@@ -19,15 +19,12 @@ beforeEach(async () => {
 
 test('all users are returned', async () => {
   const res = await helper.usersInDb()
-
   expect(res.length).toBe(helper.initialUsers.length)
 })
 
-test('a specific user is within the returned usersß', async () => {
+test('a specific user is within the returned users', async () => {
   const res = await helper.usersInDb()
-
   const usernames = res.map(data => data.username)
-
   expect(usernames).toContain('Ensimmäinen')
 })
 
@@ -40,11 +37,8 @@ test('users are returned as json', async () => {
 
 test('a specific user can be returned', async () => {
   const res = await helper.usersInDb()
-
   const firstUser = res[0]
-
   const returnedUser = await User.findById(firstUser.id)
-
   expect(returnedUser.username).toBe(firstUser.username)
 })
 
@@ -56,7 +50,7 @@ test('a user with a unique username can be added', async () => {
     lastname: 'Testaaja',
     username: 'Neljas',
     email: 'neljas@email.com',
-    passwordHash: 'salasana',
+    password: 'salasana',
     organization: 'NeljasTestiOrganisaatio',
     date: Date.now()
   }
@@ -68,7 +62,6 @@ test('a user with a unique username can be added', async () => {
     .expect('Content-Type', /application\/json/)
 
   const usersAtEnd = await helper.usersInDb()
-
   expect(usersAtEnd.length).toBe(usersAtStart.length + 1)
 
   const usernames = usersAtEnd.map(user => user.username)
@@ -79,7 +72,7 @@ test('user cannot be added if required fields are not included', async () => {
   const usersAtStart = await helper.usersInDb()
 
   const newUser = {
-    passwordHash: 'salasana',
+    password: 'salasana',
     organization: 'TestOrganization'
   }
 
@@ -94,7 +87,6 @@ test('user cannot be added if required fields are not included', async () => {
   expect(result.body.error).toContain('Path `email` is required')
 
   const usersAtEnd = await helper.usersInDb()
-
   expect(usersAtEnd.length).toBe(usersAtStart.length)
 })
 
@@ -106,7 +98,7 @@ test('only unique usernames and emails can be added to database', async () => {
     lastname: 'Testaaja',
     username: 'Kolmas',
     email: 'kolmasTesti@email.com',
-    passwordHash: 'salasana',
+    password: 'salasana',
     organization: 'KolmasTestiYritys',
     date: new Date()
   }
@@ -124,7 +116,7 @@ test('only unique usernames and emails can be added to database', async () => {
     lastname: 'Testaaja',
     username: 'KolmasTesti',
     email: 'kolmas@email.com',
-    passwordHash: 'salasana',
+    password: 'salasana',
     organization: 'KolmasTestiYritys',
     date: new Date()
   }
@@ -138,7 +130,36 @@ test('only unique usernames and emails can be added to database', async () => {
   expect(secondResult.body.error).toContain('`email` to be unique')
 
   const usersAtEnd = await helper.usersInDb()
+  expect(usersAtEnd.length).toBe(usersAtStart.length)
+})
 
+test('user can be deleted', async () => {
+  const usersAtStart = await helper.usersInDb()
+
+  const newUser = {
+    firstname: 'Fifth',
+    lastname: 'User',
+    username: 'FifthUser',
+    email: 'fifth@email.com',
+    password: 'password',
+    organization: 'FifthTestCompany',
+    date: new Date()
+  }
+
+  const res = await api
+    .post('/api/users')
+    .send(newUser)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+  const usersAfterPost = await helper.usersInDb()
+  expect(usersAfterPost.length).toBe(usersAtStart.length + 1)
+
+  await api
+    .delete(`/api/users/${res.body.id}`)
+    .expect(204)
+
+  const usersAtEnd = await helper.usersInDb()
   expect(usersAtEnd.length).toBe(usersAtStart.length)
 })
 

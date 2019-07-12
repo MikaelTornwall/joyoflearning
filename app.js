@@ -5,12 +5,14 @@ const cors =                require('cors')
 const mongoose =            require('mongoose')
 const middleware =          require('./utils/middleware')
 const usersRouter =         require('./controllers/users')
+const userLoginRouter =     require('./controllers/userLogin')
 const studentsRouter =      require('./controllers/students')
+const studentLoginRouter =  require('./controllers/studentLogin')
 const imagesRouter =        require('./controllers/images')
 const config =              require('./utils/config')
 const multer =              require('multer')
-let GridFSStorage =         require('multer-gridfs-storage');
-let Grid =                  require('gridfs-stream');
+let GridFSStorage =         require('multer-gridfs-storage')
+let Grid =                  require('gridfs-stream')
 const morgan =              require('morgan')
 const logger =              require('./utils/logger')
 const app =                 express()
@@ -25,7 +27,7 @@ const connectToDatabase = async () => {
       db: promise
     })
 
-    logger.info(`Connected to database`)
+    logger.info('Connected to database')
   } catch (error) {
     logger.error('error connecting to database: ', error.message)
   }
@@ -48,12 +50,14 @@ connectToDatabase()
 
 app.use(cors())
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(morgan('dev'));
+app.use(bodyParser.urlencoded({extended: true}))
+app.use(morgan('dev'))
 app.use(middleware.requestLogger)
 app.use('/uploads', express.static('uploads'))
 app.use('/api/users', usersRouter)
 app.use('/api/students', studentsRouter)
+app.use('/api/users/login', userLoginRouter)
+app.use('/api/students/login', studentLoginRouter)
 app.use('/api/images', imagesRouter)
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
