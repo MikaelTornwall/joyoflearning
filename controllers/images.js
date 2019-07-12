@@ -18,7 +18,7 @@ imagesRouter.get('/', async (req, res) => {
 // upload.single('image'), image:lla on vastaava <input type="file" name="image" />
 imagesRouter.post('/', upload.single('image'), async (req, res) => {
   try {
-    console.log("FILE: " + req.file)
+    console.log('FILE: ' + req.file)
     if (!req.file) {
       console.log('No file')
       res.send({
@@ -31,8 +31,8 @@ imagesRouter.post('/', upload.single('image'), async (req, res) => {
       })
     }
 
-    console.log("Request ---", req.body);
-    console.log("Request file ---", req.file)
+    console.log('Request ---', req.body)
+    console.log('Request file ---', req.file)
 
     const host = req.host
     // file or files object

@@ -39,7 +39,10 @@ const userSchema = new mongoose.Schema({
     type: Date,
     required: true
   },
-  logo: Buffer,
+  logo: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Image'
+  },
   courses: Array,
   role: String
 })

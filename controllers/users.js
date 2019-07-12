@@ -1,7 +1,10 @@
 const usersRouter =   require('express').Router()
 const bcrypt =        require('bcrypt')
+const multer =        require('multer')
+const upload =        multer({ dest: 'uploads/' })
 const User =          require('../models/user')
 const Role =          require('../utils/role')
+const Image =         require('../models/image')
 
 usersRouter.get('/', async (req, res, next) => {
   try {
@@ -28,9 +31,34 @@ usersRouter.get('/:id', async (req, res, next) => {
   }
 })
 
-usersRouter.post('/', async (req, res, next) => {
+usersRouter.post('/', upload.single('logo'), async (req, res, next) => {
   try {
+
     const body = req.body
+    console.log(body)
+    let logoId = null
+    console.log('FILE: ' + req.file)
+
+    if (req.file) {
+      console.log('Request ---', body)
+      console.log('Request file ---', req.file)
+
+      const host = req.host
+      const filePath = req.protocol + '://' + host + ':3001/' + req.file.path
+
+      const newImage = new Image({
+        image: {
+          data: req.file.buffer,
+          path: filePath,
+          size: req.file.size,
+          date: new Date(),
+          contentType: req.file.mimetype
+        }
+      })
+
+      const savedImage = await newImage.save()
+      logoId = savedImage.id
+    }
 
     const saltrounds = 10
     const passwordHash = await bcrypt.hash(body.password, saltrounds)
@@ -42,11 +70,16 @@ usersRouter.post('/', async (req, res, next) => {
       email: body.email,
       passwordHash,
       organization: body.organization,
+      logo: logoId,
       date: new Date(),
       role: Role.Admin
     })
 
     const savedUser = await user.save()
+
+    if (logoId) {
+      await Image.findByIdAndUpdate(logoId, { user: savedUser.id }, { new: true })
+    }
 
     res.json(savedUser)
   } catch (error) {

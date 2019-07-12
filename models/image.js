@@ -6,7 +6,11 @@ const imageSchema = new mongoose.Schema({
     path: String,
     size: Number,
     date: Date,
-    contentType: String
+    contentType: String,
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    }
   }
 })
 
