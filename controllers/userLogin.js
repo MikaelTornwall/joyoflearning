@@ -24,10 +24,10 @@ userLoginRouter.post('/', async (req, res, next) => {
     }
 
     const token = jwt.sign(userForToken, process.env.SECRETUSER)
-
+    
     res
       .status(200)
-      .send({ token, username: user.username })
+      .send({ token, username: user.username, id: user._id })
   } catch(error) {
     next(error)
   }

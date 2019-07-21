@@ -4,19 +4,30 @@ const Image =          require('../models/image')
 const multer =         require('multer')
 const upload =         multer({ dest: 'uploads/' })
 
-imagesRouter.get('/', async (req, res) => {
+imagesRouter.get('/', async (req, res, next) => {
   try {
     const images = await Image.find({})
     console.log(images)
     res.json(images)
-  } catch (exception) {
-    console.log(exception)
+  } catch (error) {
+    next(error)
+  }
+})
+
+imagesRouter.get('/:id', async (req, res, next) => {
+  try {
+    const id = req.params.id
+
+    const image = await Image.findById(id)
+    res.json(image)
+  } catch(error) {
+    next(error)
   }
 })
 
 // Muista enctype="multipart/form-data" tai muu datan muuntaminen front-endissa
 // upload.single('image'), image:lla on vastaava <input type="file" name="image" />
-imagesRouter.post('/', upload.single('image'), async (req, res) => {
+imagesRouter.post('/', upload.single('image'), async (req, res, next) => {
   try {
     console.log('FILE: ' + req.file)
     if (!req.file) {
@@ -49,8 +60,8 @@ imagesRouter.post('/', upload.single('image'), async (req, res) => {
     })
 
     newImage.save()
-  } catch (exception) {
-    res.status(500).json({ error: 'something went wrong' })
+  } catch (error) {
+    next(error)
   }
 })
 
