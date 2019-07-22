@@ -71,4 +71,35 @@ coursesRouter.post('/', async (req, res, next) => {
   }
 })
 
+coursesRouter.delete('/:id', async (req, res, next) => {
+  const id = req.params.id
+  const token = getToken(req)
+
+  try {
+    const decodedToken = jwt.verify(token, process.env.SECRETUSER)
+
+    if (!token || !decodedToken.id) {
+      return res.status(401).json({ error: 'token missing or invalid' })
+    }
+
+    const course = await Course.findById(id)
+    const user = await User.findById(course.user)
+    const courses = Array.from(user.courses)
+
+    if (course.user == decodedToken.id) {
+      let courseIds = courses.filter(courseId => courseId != id)
+
+      user.courses = courseIds
+
+      await user.save()
+      await Course.findByIdAndRemove(id)
+      res.status(204).end()
+    } else {
+      return res.status(401).json({ error: 'Wrong user id' })
+    }
+  } catch (error) {
+    next(error)
+  }
+})
+
 module.exports = coursesRouter
