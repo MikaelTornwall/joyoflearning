@@ -5,6 +5,7 @@ const upload =        multer({ dest: 'uploads/' })
 const User =          require('../models/user')
 const Role =          require('../utils/role')
 const Image =         require('../models/image')
+const Course =        require('../models/course')
 
 usersRouter.get('/', async (req, res, next) => {
   try {
@@ -27,6 +28,27 @@ usersRouter.get('/:id', async (req, res, next) => {
       res.status(404).end()
     }
   } catch (error) {
+    next(error)
+  }
+})
+
+usersRouter.get('/:id/courses', async (req, res, next) => {
+  try {
+    const id = req.params.id
+
+    const user = await User.findById(id)
+
+    const userCourses = user.courses
+
+    const getCourses = async () => {
+      return await Promise.all(userCourses.map(id => Course.findById(id)))
+    }
+
+    const courseObjects = await getCourses()
+
+    console.log(courseObjects)
+    res.json(courseObjects)
+  } catch(error) {
     next(error)
   }
 })

@@ -4,6 +4,10 @@ const courseSchema = new mongoose.Schema({
   title: String,
   active: Boolean,
   created: Date,
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
   content: Map
 })
 

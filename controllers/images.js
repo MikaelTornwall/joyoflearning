@@ -1,5 +1,4 @@
 const imagesRouter =   require('express').Router()
-const fs =             require('fs')
 const Image =          require('../models/image')
 const multer =         require('multer')
 const upload =         multer({ dest: 'uploads/' })
