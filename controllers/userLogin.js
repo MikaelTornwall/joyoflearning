@@ -17,7 +17,7 @@ userLoginRouter.post('/', async (req, res, next) => {
         error: 'invalid username or password'
       })
     }
-    
+
     const userForToken = {
       username: user.username,
       id: user._id
@@ -27,7 +27,7 @@ userLoginRouter.post('/', async (req, res, next) => {
 
     res
       .status(200)
-      .send({ token, username: user.username, id: user._id })
+      .send({ token, id: user._id, username: user.username, role: user.role })
   } catch(error) {
     next(error)
   }

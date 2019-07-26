@@ -19,7 +19,12 @@ const studentSchema = new mongoose.Schema({
     minlength: 5,
     required: true
   },
-  enrolled: Array,
+  enrolled: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Course'
+    }
+  ],
   role: String
 })
 

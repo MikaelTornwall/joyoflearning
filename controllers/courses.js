@@ -36,6 +36,7 @@ const getToken = (req) => {
   return null
 }
 
+// Create
 coursesRouter.post('/', async (req, res, next) => {
   const body = req.body
 

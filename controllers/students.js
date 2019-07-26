@@ -50,6 +50,27 @@ studentsRouter.post('/', async (req, res, next) => {
   }
 })
 
+// Enroll
+studentsRouter.post('/enroll/:id', async (req, res, next) => {
+  try {
+    const id = req.params.id
+    const courseId = req.body.courseId
+
+    const student = await Student.findById(id)
+
+    const before = Array.from(student.enrolled)
+    const after = Array.from(student.enrolled.filter(course => course != courseId))
+
+    before.length != after.length ? student.enrolled = after : student.enrolled = student.enrolled.concat(courseId)
+
+    const savedStudent = await student.save()
+    res.json(savedStudent.toJSON())
+  } catch(error) {
+    next(error)
+  }
+})
+
+
 studentsRouter.delete('/:id', async (req, res, next) => {
   try {
     const id = req.params.id

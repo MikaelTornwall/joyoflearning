@@ -27,7 +27,7 @@ studentLoginRouter.post('/', async (req, res, next) => {
 
     res
       .status(200)
-      .send({ token, username: student.username })
+      .send({ token, id: student._id, username: student.username, role: student.role })
   } catch(error) {
     next(error)
   }
