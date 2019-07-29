@@ -27,7 +27,11 @@ userLoginRouter.post('/', async (req, res, next) => {
 
     res
       .status(200)
-      .send({ token, id: user._id, username: user.username, role: user.role })
+      .send({
+        token,
+        id: user._id,
+        username: user.username,
+      })
   } catch(error) {
     next(error)
   }
