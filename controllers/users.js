@@ -12,6 +12,7 @@ usersRouter.get('/', async (req, res, next) => {
     const users = await User
       .find({})
       .populate('courses', { title: 1, active: 1, content: 1 })
+      .populate('logo', { image: 1 })
     res.json(users)
   } catch (error) {
     next(error)
@@ -25,6 +26,7 @@ usersRouter.get('/:id', async (req, res, next) => {
     const user = await User
       .findById({ _id: id })
       .populate('courses', { title: 1, active: 1, content: 1 })
+      .populate('logo', { image: 1 })
 
     if (user) {
       res.json(user.toJSON())
@@ -40,18 +42,21 @@ usersRouter.get('/:id/courses', async (req, res, next) => {
   try {
     const id = req.params.id
 
-    const user = await User.findById(id)
+    const user = await User
+      .findById(id)
+      .populate('courses', { title: 1, active: 1, content: 1 })
 
-    const userCourses = user.courses
-
-    const getCourses = async () => {
-      return await Promise.all(userCourses.map(id => Course.findById(id)))
-    }
-
-    const courseObjects = await getCourses()
-
-    console.log(courseObjects)
-    res.json(courseObjects)
+    // const userCourses = user.courses
+    //
+    // const getCourses = async () => {
+    //   return await Promise.all(userCourses.map(id => Course.findById(id)))
+    // }
+    //
+    // const courseObjects = await getCourses()
+    //
+    // console.log(courseObjects)
+    //
+    res.json(user.courses)
   } catch(error) {
     next(error)
   }

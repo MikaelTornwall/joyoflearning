@@ -37,18 +37,11 @@ studentsRouter.get('/:id/courses', async (req, res, next) => {
   try {
     const id = req.params.id
 
-    const user = await Student.findById(id)
+    const student = await Student
+      .findById(id)
+      .populate('enrolled', { title: 1, active: 1, content: 1 })
 
-    const studentCourses = user.enrolled
-
-    const getCourses = async () => {
-      return await Promise.all(studentCourses.map(id => Course.findById(id)))
-    }
-
-    const courseObjects = await getCourses()
-
-    console.log(courseObjects)
-    res.json(courseObjects)
+    res.json(student.enrolled)
   } catch(error) {
     next(error)
   }
