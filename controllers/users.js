@@ -9,7 +9,9 @@ const Course =        require('../models/course')
 
 usersRouter.get('/', async (req, res, next) => {
   try {
-    const users = await User.find({})
+    const users = await User
+      .find({})
+      .populate('courses', { title: 1, active: 1, content: 1 })
     res.json(users)
   } catch (error) {
     next(error)
@@ -20,7 +22,9 @@ usersRouter.get('/:id', async (req, res, next) => {
   try {
     const id = req.params.id
 
-    const user = await User.findById({ _id: id })
+    const user = await User
+      .findById({ _id: id })
+      .populate('courses', { title: 1, active: 1, content: 1 })
 
     if (user) {
       res.json(user.toJSON())

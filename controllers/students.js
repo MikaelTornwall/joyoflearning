@@ -1,11 +1,14 @@
 const studentsRouter =   require('express').Router()
 const bcrypt =           require('bcrypt')
 const Student =          require('../models/student')
+const Course =          require('../models/course')
 const Role =             require('../utils/role')
 
 studentsRouter.get('/', async (req, res, next) => {
   try {
-    const students = await Student.find({})
+    const students = await Student
+      .find({})
+      .populate('enrolled', { title: 1, active: 1 })
     res.json(students)
   } catch (error) {
     next(error)
@@ -16,13 +19,36 @@ studentsRouter.get('/:id', async (req, res, next) => {
   try {
     const id = req.params.id
 
-    const student = await Student.findById({ _id: id })
+    const student = await Student
+      .findById({ _id: id })
+      .populate('enrolled', { title: 1, active: 1 })
 
     if (student) {
       res.json(student.toJSON())
     } else {
       res.status(404).end
     }
+  } catch(error) {
+    next(error)
+  }
+})
+
+studentsRouter.get('/:id/courses', async (req, res, next) => {
+  try {
+    const id = req.params.id
+
+    const user = await Student.findById(id)
+
+    const studentCourses = user.enrolled
+
+    const getCourses = async () => {
+      return await Promise.all(studentCourses.map(id => Course.findById(id)))
+    }
+
+    const courseObjects = await getCourses()
+
+    console.log(courseObjects)
+    res.json(courseObjects)
   } catch(error) {
     next(error)
   }

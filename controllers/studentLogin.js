@@ -1,7 +1,7 @@
-const jwt =           require('jsonwebtoken')
-const bcrypt =        require('bcrypt')
-const studentLoginRouter =   require('express').Router()
-const Student =          require('../models/student')
+const jwt =                   require('jsonwebtoken')
+const bcrypt =                require('bcrypt')
+const studentLoginRouter =    require('express').Router()
+const Student =               require('../models/student')
 
 studentLoginRouter.post('/', async (req, res, next) => {
   try {
